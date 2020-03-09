@@ -1,0 +1,3 @@
+editor: "kile"
+default_pattern: "default_pattern.tex"
+source: "tex"
