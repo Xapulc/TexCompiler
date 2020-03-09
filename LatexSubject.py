@@ -4,6 +4,7 @@ import subprocess
 
 class LatexSubject(object):
     def __init__(self,
+                 viewer: str,
                  editor: str,
                  source: str,
                  pattern: str,
@@ -11,6 +12,7 @@ class LatexSubject(object):
                  path: str,
                  pdf_name: str = "document",
                  title: str = None):
+        self._viewer = viewer
         self._editor = editor
         self._source = source
         self._pattern = pattern
@@ -23,16 +25,18 @@ class LatexSubject(object):
         cur_path = os.path.abspath(".")
         os.chdir(os.path.join(self._path, self._source))
 
-        if targets is not None:
+        if targets is not None and targets:
             for target in targets:
                 file_name = f"{self._pdf}{target}"
                 subprocess.run(["latexmk", "-quiet", "-pdf", f"{file_name}.tex"])
                 subprocess.run(["rm", "-f", f"../{file_name}.pdf"])
                 subprocess.run(["mv", f"{file_name}.pdf", f"../{file_name}.pdf"])
         else:
-            for target in os.listdir(self._source):
-                subprocess.run(["latexmk", "-pdf", "-output='..'",
-                                target])
+            for target in os.listdir("."):
+                file_name = target[:-len(".tex")]
+                subprocess.run(["latexmk", "-quiet", "-pdf", f"{file_name}.tex"])
+                subprocess.run(["rm", "-f", f"../{file_name}.pdf"])
+                subprocess.run(["mv", f"{file_name}.pdf", f"../{file_name}.pdf"])
 
         subprocess.run(["latexmk", "-c"])
         os.chdir(cur_path)
@@ -60,5 +64,9 @@ class LatexSubject(object):
                     newfile.writelines(tex_file)
 
     def edit(self, target: int):
-        subprocess.run([self._editor, os.path.join(self._path, self._source,
-                                                   f"{self._pdf}{target}.tex")])
+        subprocess.run([self._editor,
+                        os.path.join(self._path, self._source, f"{self._pdf}{target}.tex")])
+
+    def view(self, target: int):
+        subprocess.run([self._viewer,
+                        os.path.join(self._path, f"{self._pdf}{target}.pdf")])

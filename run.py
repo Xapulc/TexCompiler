@@ -13,7 +13,8 @@ if __name__ == "__main__":
 
     subjects = {}
     for command_name, subject in subjects_cfg.items():
-        subjects[command_name] = LatexSubject(def_cfg["editor"],
+        subjects[command_name] = LatexSubject(def_cfg["viewer"],
+                                              def_cfg["editor"],
                                               def_cfg["source"],
                                               def_cfg["default_pattern"],
                                               subject["name"],
@@ -47,6 +48,13 @@ if __name__ == "__main__":
                              help="name of project")
     parser_edit.add_argument("number", type=int, help="number of target files")
     parser_edit.set_defaults(func=lambda args: subjects[args.command_name].edit(args.number))
+
+    # view pdf by config reader
+    parser_view = subparsers.add_parser("view", help=f"view pdf in one of project")
+    parser_view.add_argument("command_name", choices=subjects.keys(), type=str,
+                             help="name of project")
+    parser_view.add_argument("number", type=int, help="number of target files")
+    parser_view.set_defaults(func=lambda args: subjects[args.command_name].view(args.number))
 
     args = parser.parse_args()
     args.func(args)
