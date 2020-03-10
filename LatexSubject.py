@@ -8,7 +8,7 @@ class LatexSubject(object):
                  editor: str,
                  source: str,
                  pattern: str,
-                 name: str,
+                 desc: str,
                  path: str,
                  pdf_name: str = "document",
                  title: str = None):
@@ -16,10 +16,13 @@ class LatexSubject(object):
         self._editor = editor
         self._source = source
         self._pattern = pattern
-        self._name = name
+        self._desc = desc
         self._path = path
         self._pdf = pdf_name
         self._title = title
+
+    def get_desc(self):
+        return self._desc
 
     def compile(self, targets: list):
         cur_path = os.path.abspath(".")

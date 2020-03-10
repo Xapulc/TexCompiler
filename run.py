@@ -17,14 +17,16 @@ if __name__ == "__main__":
                                               def_cfg["editor"],
                                               def_cfg["source"],
                                               def_cfg["default_pattern"],
-                                              subject["name"],
+                                              subject["desc"],
                                               subject["path"],
                                               pdf_name=subject.setdefault("pdf", "document"),
                                               title=subject.setdefault("title", None))
 
     # start parse
     parser = argparse.ArgumentParser(description="Support program for TeX projects",
-                                     epilog=f"Projects: {list(subjects.keys())}")
+                                     epilog="Projects: " +
+                                            "; ".join(f"command: {com}, desc: {subjects[com].get_desc()}"
+                                                      for com in subjects.keys()))
     subparsers = parser.add_subparsers()
 
     # compile tex
