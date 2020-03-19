@@ -47,9 +47,10 @@ class LatexSubject(object):
     def create(self, target: int):
         with open(self._pattern, "r") as pattern:
             tex_file = pattern.readlines()
-            endline = tex_file[-1]
-            tex_file[-1] = "\section*{" + f"{self._title} {target}" + "}\n"
-            tex_file.append(endline)
+            if self._title is not None:
+                endline = tex_file[-1]
+                tex_file[-1] = "\section*{" + f"{self._title} {target}" + "}\n"
+                tex_file.append(endline)
 
             is_exists = False
             target_file = f"{self._pdf}{target}.tex"
